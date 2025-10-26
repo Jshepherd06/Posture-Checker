@@ -3,7 +3,7 @@ opencv for camera
 
 mediaPipe for pose detection
 
-todo: 
+## todo: 
   - improved posture analysis (posture analyzer class or model)
   - calibration
   - PoseDetector class
