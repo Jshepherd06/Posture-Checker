@@ -2,6 +2,7 @@ import cv2
 import mediapipe as mp
 import streamlit as st
 import numpy as np
+import time
 
 class PoseDetector:
     def __init__(self,posture_threshold=0.75):
@@ -16,36 +17,37 @@ class PoseDetector:
         self.FRAME_WINDOW = st.image([])
 
         # For error handling
-        self.status_placeholder = st.empty()
+        # Too dark
+        self.dark_warning_placeholder = st.empty()
+        self.no_cam_warning_placeholder = st.empty()
         self.too_dark = False
         self.has_warned_dark = False
-
+        self.brightness_threshold = 40
     
     def run(self):
         while True:
             ret, frame = self.cap.read()
             if not ret:
+                print("hello")
+                with self.no_cam_warning_placeholder.container():
+                    st.warning("⚠️ No camera feed — trying to reconnect...")
+                self.reconnect_camera()
                 break
-            
+
             # Check brightness
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
             brightness = np.mean(gray)
 
-            if brightness < 40:
-                # todo: remove warmings after lighting improves, have frames continue to show
+            if brightness < self.brightness_threshold:
                 if not self.has_warned_dark:
-                    with self.status_placeholder.container():
+                    with self.dark_warning_placeholder.container():
                         st.warning("⚠️ Too dark — please improve lighting!")
                     self.has_warned_dark = True
                 self.too_dark = True
-                self.FRAME_WINDOW.image(frame, channels="BGR")
-                continue
             else:
                 self.too_dark = False
                 self.has_warned_dark = False
-                self.status_placeholder.empty()
-                
-
+                self.dark_warning_placeholder.empty()
 
             # Convert to RGB
             rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
@@ -53,7 +55,6 @@ class PoseDetector:
 
             # Draw pose landmarks
             self.mp_drawing.draw_landmarks(frame, results.pose_landmarks, self.mp_pose.POSE_CONNECTIONS)
-
             if results.pose_landmarks:
                 landmarks = results.pose_landmarks.landmark
                 posture_ratio = self.read_posture(landmarks)
@@ -86,6 +87,11 @@ class PoseDetector:
             cv2.putText(frame, "Good posture", (30, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,255,0), 2)
         else:
             cv2.putText(frame, "Bad posture", (30, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 2)
+    
+    def reconnect_camera(self):
+        self.cap.release()
+        time.sleep(0.5)
+        self.cap = cv2.VideoCapture(0)
 
 if __name__ == "__main__":
     detector = PoseDetector()

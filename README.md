@@ -1,8 +1,7 @@
 # 🧍‍♂️ Real-Time Posture Checker
 
 A **real-time posture detection app** built with **OpenCV**, **MediaPipe**, and **Streamlit**.  
-It uses your webcam to detect your body landmarks and determine whether you are sitting or standing with good posture.  
-The app also detects when your lighting is too dark and gives you a helpful warning — without stopping the camera feed.
+It uses your webcam to detect your body landmarks and determine whether you are sitting or standing with good posture.
 
 ---
 

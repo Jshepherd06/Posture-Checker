@@ -3,8 +3,12 @@ import cv2
 import mediapipe as mp
 from PoseDetector import PoseDetector
 
-st.header("Welcome!")
-st.title("Posture Checker")
+Homepage = st.Page(
+    "Homepage.py", 
+    title="Home", 
+    icon=":material/home:"
+)
+
 PoseDetector = st.Page(
     "PoseDetector.py",
     title="Pose Detector",
@@ -13,7 +17,8 @@ PoseDetector = st.Page(
 
 #use streamlit navigation and pages to go to posture detector
 page_dict = {}
-page_dict["Posture Detector"] = [PoseDetector]
+page_dict["Home"] = [Homepage]
+page_dict["Pose Detector"] = [PoseDetector]
 page_dict["Settings"] = [st.Page("settings.py", title="Settings", icon=":material/settings:")]
 pg = st.navigation(page_dict)
 pg.run()
