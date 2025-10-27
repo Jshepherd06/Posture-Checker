@@ -1,5 +1,6 @@
 import cv2
 import mediapipe as mp
+import streamlit as st
 
 class PoseDetector:
     def __init__(self,posture_threshold=0.75):
@@ -9,6 +10,7 @@ class PoseDetector:
 
         self.cap = cv2.VideoCapture(0)
         self.posture_threshold = posture_threshold
+        self.FRAME_WINDOW = st.image([])
     
     def run(self):
         while True:
@@ -28,12 +30,8 @@ class PoseDetector:
                 posture_ratio = self.read_posture(landmarks)
 
                 self.add_text(frame, posture_ratio)
-
-            cv2.imshow('Posture Checker', frame)
-            if cv2.waitKey(1) & 0xFF == 27:
-                break
+            self.FRAME_WINDOW.image(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
         self.cap.release()
-        cv2.destroyAllWindows()
     
     def read_posture(self,landmarks):
         nose = landmarks[0]
