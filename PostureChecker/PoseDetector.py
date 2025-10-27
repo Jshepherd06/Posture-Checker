@@ -1,22 +1,51 @@
 import cv2
 import mediapipe as mp
 import streamlit as st
+import numpy as np
 
 class PoseDetector:
     def __init__(self,posture_threshold=0.75):
+        # Mediapipe pose setup
         self.mp_pose = mp.solutions.pose
         self.pose = self.mp_pose.Pose()
         self.mp_drawing = mp.solutions.drawing_utils
 
+        # Video capture setup
         self.cap = cv2.VideoCapture(0)
         self.posture_threshold = posture_threshold
         self.FRAME_WINDOW = st.image([])
+
+        # For error handling
+        self.status_placeholder = st.empty()
+        self.too_dark = False
+        self.has_warned_dark = False
+
     
     def run(self):
         while True:
             ret, frame = self.cap.read()
             if not ret:
                 break
+            
+            # Check brightness
+            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+            brightness = np.mean(gray)
+
+            if brightness < 40:
+                # todo: remove warmings after lighting improves, have frames continue to show
+                if not self.has_warned_dark:
+                    with self.status_placeholder.container():
+                        st.warning("⚠️ Too dark — please improve lighting!")
+                    self.has_warned_dark = True
+                self.too_dark = True
+                self.FRAME_WINDOW.image(frame, channels="BGR")
+                continue
+            else:
+                self.too_dark = False
+                self.has_warned_dark = False
+                self.status_placeholder.empty()
+                
+
 
             # Convert to RGB
             rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)

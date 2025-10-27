@@ -3,6 +3,7 @@ import cv2
 import mediapipe as mp
 from PoseDetector import PoseDetector
 
+st.header("Welcome!")
 st.title("Posture Checker")
 PoseDetector = st.Page(
     "PoseDetector.py",
