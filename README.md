@@ -45,29 +45,28 @@ pip install streamlit opencv-python mediapipe numpy
 ## Usage
 Open terminal or cd into PostureChecker/ folder then run the streamlit app:
 ```bash
-streamlit run interface.py
+streamlit run app.py
 ```
 This will open a browser tab with the application
 
 
 ## 🧠 Dependencies
 
-OpenCV
+**OpenCV**
  – Real-time camera use
 
-MediaPipe
+**MediaPipe**
  – Human pose detection
 
-Streamlit
+**Streamlit**
  – Web UI framework
 
-NumPy
+**NumPy**
 
 
 ## todo: 
   - improved posture analysis (posture analyzer class or model)
   - calibration
-  - PoseDetector class
   - user interface
 
     a. set posture analysis sensitivity
@@ -75,8 +74,6 @@ NumPy
     b. calibrate button
 
     c. run
-
-    d. want it to be a gui (not terminal)
 
     e. warning settings
     
