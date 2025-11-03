@@ -39,7 +39,7 @@ pip install .
 ```
 or you can do it manually:
 ```bash
-pip install streamlit opencv-python mediapipe numpy
+pip install streamlit opencv-python mediapipe numpy pygame
 ```
 
 ## Usage
@@ -62,6 +62,9 @@ This will open a browser tab with the application
  – Web UI framework
 
 **NumPy**
+
+**PyGame**
+ – Audio handling
 
 
 ## todo: 
