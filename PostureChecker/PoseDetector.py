@@ -21,10 +21,11 @@ class PoseDetector:
         # Audio Handling
         self.lastTime = 0
         pygame.mixer.init()
-
-        # Load the sound (works with .wav)
         sound_path = "assests/warning.wav"
         self.warning_sound = pygame.mixer.Sound(sound_path)
+
+        # Calibration
+        self.baseline = None
 
         # For error handling
         # Too dark
@@ -35,6 +36,11 @@ class PoseDetector:
         self.brightness_threshold = 40
     
     def run(self):
+        calibrate = st.button("Calibrate Good Posture")
+
+        if calibrate:
+            self.calibrate(duration=3)
+        
         while True:
             ret, frame = self.cap.read()
             if not ret:
@@ -68,7 +74,6 @@ class PoseDetector:
             if results.pose_landmarks:
                 landmarks = results.pose_landmarks.landmark
                 posture_ratio = self.read_posture(landmarks)
-                self.handle_audio_alert(posture_ratio)
 
                 self.add_text(frame, posture_ratio)
             self.FRAME_WINDOW.image(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
@@ -92,12 +97,17 @@ class PoseDetector:
         return posture_ratio
 
     def add_text(self, frame, posture_ratio):
+        if self.baseline:
+            threshold = self.baseline * 0.85  # 90% of calibrated good posture
+        else:
+            threshold = self.posture_threshold
         cv2.putText(frame, f"Posture Ratio: {posture_ratio:.4f}", (30, 80), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,255), 2)
         cv2.putText(frame, f"Press ESC to quit", (30, 110), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,255), 2)
-        if posture_ratio > 0.75:
+        if posture_ratio > threshold:
             cv2.putText(frame, "Good posture", (30, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,255,0), 2)
         else:
             cv2.putText(frame, "Bad posture", (30, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 2)
+            self.handle_audio_alert(posture_ratio)
     
     def reconnect_camera(self):
         self.cap.release()
@@ -111,6 +121,33 @@ class PoseDetector:
                 self.lastTime = time.time()
                 if self.warning_sound:
                     self.warning_sound.play()
+
+    def calibrate(self, duration=3):
+        """Collect posture ratios for a few seconds to compute baseline."""
+        st.info("Sit upright — calibrating posture...")
+        ratios = []
+        start = time.time()
+
+        while time.time() - start < duration:
+            ret, frame = self.cap.read()
+            if not ret:
+                continue
+            rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            results = self.pose.process(rgb)
+
+            if results.pose_landmarks:
+                ratio = self.read_posture(results.pose_landmarks.landmark)
+                ratios.append(ratio)
+                self.mp_drawing.draw_landmarks(frame, results.pose_landmarks, self.mp_pose.POSE_CONNECTIONS)
+
+            self.FRAME_WINDOW.image(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+
+        if ratios:
+            self.baseline = np.mean(ratios)
+            b = self.baseline * 0.85
+            st.success(f"✅ Calibration complete. Baseline posture ratio: {b:.3f}")
+        else:
+            st.error("⚠️ Calibration failed — no pose detected.")
 
 if __name__ == "__main__":
     detector = PoseDetector()
