@@ -3,6 +3,16 @@ import cv2
 import mediapipe as mp
 from PoseDetector import PoseDetector
 
+# Use Streamlit session state to persist settings between pages
+if "pose_settings" not in st.session_state:
+    st.session_state.pose_settings = {
+        "posture_threshold": 0.75,
+        "posture_strictness": 0.85,
+        "warning_wait": 3,
+        "calibration_duration": 3,
+        "sound_enabled": True,
+    }
+
 Homepage = st.Page(
     "Homepage.py", 
     title="Home", 
