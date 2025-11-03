@@ -15,10 +15,17 @@ PoseDetector = st.Page(
     icon=":material/healing:",
 )
 
+Statistics = st.Page(
+    "stats.py",
+    title="Statistics",
+    icon=":material/healing:"
+)
+
 #use streamlit navigation and pages to go to posture detector
 page_dict = {}
 page_dict["Home"] = [Homepage]
 page_dict["Pose Detector"] = [PoseDetector]
 page_dict["Settings"] = [st.Page("settings.py", title="Settings", icon=":material/settings:")]
+page_dict["Statistics"] = [Statistics]
 pg = st.navigation(page_dict)
 pg.run()

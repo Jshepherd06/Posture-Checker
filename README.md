@@ -79,4 +79,5 @@ This will open a browser tab with the application
     
   - warning sound/popup
   - statistical analysis longer periods
+  - error handling
     

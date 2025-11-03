@@ -3,6 +3,8 @@ import mediapipe as mp
 import streamlit as st
 import numpy as np
 import time
+from pathlib import Path
+import pygame
 
 class PoseDetector:
     def __init__(self,posture_threshold=0.75):
@@ -15,6 +17,14 @@ class PoseDetector:
         self.cap = cv2.VideoCapture(0)
         self.posture_threshold = posture_threshold
         self.FRAME_WINDOW = st.image([])
+
+        # Audio Handling
+        self.lastTime = 0
+        pygame.mixer.init()
+
+        # Load the sound (works with .wav)
+        sound_path = "assests/warning.wav"
+        self.warning_sound = pygame.mixer.Sound(sound_path)
 
         # For error handling
         # Too dark
@@ -58,6 +68,7 @@ class PoseDetector:
             if results.pose_landmarks:
                 landmarks = results.pose_landmarks.landmark
                 posture_ratio = self.read_posture(landmarks)
+                self.handle_audio_alert(posture_ratio)
 
                 self.add_text(frame, posture_ratio)
             self.FRAME_WINDOW.image(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
@@ -92,6 +103,14 @@ class PoseDetector:
         self.cap.release()
         time.sleep(0.5)
         self.cap = cv2.VideoCapture(0)
+        
+    def handle_audio_alert(self, posture_ratio):
+        """Play a sound when posture is bad, but not more than once per 3 seconds."""
+        if posture_ratio <= self.posture_threshold:
+            if time.time() - self.lastTime > 3:
+                self.lastTime = time.time()
+                if self.warning_sound:
+                    self.warning_sound.play()
 
 if __name__ == "__main__":
     detector = PoseDetector()
