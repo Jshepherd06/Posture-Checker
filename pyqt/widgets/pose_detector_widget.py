@@ -11,7 +11,7 @@ class PoseDetectorWidget(QWidget):
         # --- UI Layout ---
         layout = QVBoxLayout(self)
         
-        # Equivalent of st.image([])
+        # video in app
         self.video_label = QLabel("Starting camera...")
         self.video_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.video_label.setStyleSheet("background-color: black;")
@@ -23,7 +23,7 @@ class PoseDetectorWidget(QWidget):
         self.warning_label = QLabel("")
         self.warning_label.setStyleSheet("color: red; font-size: 14px;")
 
-        # Equivalent of st.button("Calibrate")
+        # start calibration
         self.calibrate_button = QPushButton("Calibrate Good Posture")
         
         layout.addWidget(self.status_label)
@@ -66,7 +66,6 @@ class PoseDetectorWidget(QWidget):
         self.warning_label.setText(text)
         
     def update_calibration_status(self, text):
-        # You could use a QMessageBox or just the status label
         self.status_label.setText(text)
 
     def stop_worker_thread(self):

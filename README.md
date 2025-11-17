@@ -1,16 +1,16 @@
-# 🧍‍♂️ Real-Time Posture Checker
+#  Real-Time Posture Checker
 
-A **real-time posture detection app** built with **OpenCV**, **MediaPipe**, and **Streamlit**.  
+A **real-time posture detection app** built with **OpenCV**, **MediaPipe**, and **PyQT**.  
 It uses your webcam to detect your body landmarks and determine whether you are sitting or standing with good posture.
 
 ---
 
-## 🚀 Features
+##  Features
 
-- 🎥 Live camera feed with **pose landmark tracking**  
-- 🧠 Calculates a **posture ratio** using the position of your nose and shoulders  
-- ✅ Displays **“Good”** or **“Bad”** posture status in real time 
-- ⚡ Built with **Streamlit** for an easy-to-use web interface  
+-  Live camera feed with **pose landmark tracking**  
+-  Calculates a **posture ratio** using the position of your nose and shoulders  
+-  Displays **“Good”** or **“Bad”** posture status in real time 
+-  UI made with PyQT with adjustable settings
 
 ---
 
@@ -39,15 +39,15 @@ pip install .
 ```
 or you can do it manually:
 ```bash
-pip install streamlit opencv-python mediapipe numpy pygame
+pip install PyQt6 opencv-python mediapipe numpy pygame
 ```
 
 ## Usage
-Open terminal or cd into PostureChecker/ folder then run the streamlit app:
+Open terminal or cd into pyqt/ folder then run the pyqt app:
 ```bash
-streamlit run app.py
+python main.py
 ```
-This will open a browser tab with the application
+This will open the application
 
 
 ## 🧠 Dependencies
@@ -58,8 +58,8 @@ This will open a browser tab with the application
 **MediaPipe**
  – Human pose detection
 
-**Streamlit**
- – Web UI framework
+**PyQT**
+ – UI framework
 
 **NumPy**
 
@@ -68,18 +68,8 @@ This will open a browser tab with the application
 
 
 ## todo: 
-  - improved posture analysis (posture analyzer class or model)
-  - calibration
-  - user interface
-
-    a. set posture analysis sensitivity
-
-    b. calibrate button
-
-    c. run
-
-    e. warning settings
-    
+  - improve readme
+  - replace streamlit app with pyqt app
   - warning sound/popup
   - statistical analysis longer periods
   - error handling

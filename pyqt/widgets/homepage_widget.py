@@ -7,17 +7,17 @@ class HomePageWidget(QWidget):
         layout = QVBoxLayout(self)
         layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        # Equivalent of st.header
+        # Welcome header
         title_label = QLabel("Welcome!")
         title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         title_label.setStyleSheet("font-size: 32px; font-weight: bold;")
         
-        # Equivalent of st.title
+        # Title of program
         subtitle_label = QLabel("Posture Checker")
         subtitle_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         subtitle_label.setStyleSheet("font-size: 24px;")
 
-        # Equivalent of st.button
+        # Get started button
         self.get_started_button = QPushButton("Get Started")
         self.get_started_button.setFixedSize(200, 50)
 

@@ -48,7 +48,7 @@ class PoseDetectorThread(QThread):
         
         while self.running:
             if not self.cap.isOpened():
-                self.system_warning.emit("⚠️ No camera feed — trying to reconnect...")
+                self.system_warning.emit("No camera feed — trying to reconnect...")
                 self.reconnect_camera()
                 time.sleep(1)
                 continue
@@ -66,7 +66,7 @@ class PoseDetectorThread(QThread):
             # --- Brightness Check ---
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
             if np.mean(gray) < self.brightness_threshold:
-                self.system_warning.emit("⚠️ Too dark — please improve lighting!")
+                self.system_warning.emit("Too dark — please improve lighting!")
             else:
                 self.system_warning.emit("") # Clear warning
 
@@ -113,9 +113,9 @@ class PoseDetectorThread(QThread):
         if ratios:
             self.baseline = np.mean(ratios)
             b = self.baseline * self.settings.get("posture_strictness")
-            self.calibration_status.emit(f"✅ Calibration complete. Baseline: {b:.3f}")
+            self.calibration_status.emit(f"Calibration complete. Baseline: {b:.3f}")
         else:
-            self.calibration_status.emit("⚠️ Calibration failed — no pose detected.")
+            self.calibration_status.emit("Calibration failed — no pose detected.")
 
     def add_text_and_check(self, frame, posture_ratio):
         """Replaces add_text, also emits signals."""
@@ -143,8 +143,6 @@ class PoseDetectorThread(QThread):
                     self.warning_sound.play()
 
     def read_posture(self, landmarks):
-        # (This function is pure logic, copy/paste it directly)
-        # ...
         nose = landmarks[0]
         left_shoulder = landmarks[11]
         right_shoulder = landmarks[12]
