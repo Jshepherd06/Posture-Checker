@@ -6,11 +6,11 @@ class AppSettings:
     This replaces the Streamlit session_state.
     """
     def __init__(self):
-        # We must define an organization and application name.
-        # This tells QSettings where to save the settings on the user's OS.
+        # define organization application name.
+        # this tells QSettings where to save the settings on the users OS.
         self.settings = QSettings("PostureAppCompany", "PostureApp")
         
-        # Define the default values, just like in your original file
+        # default values
         self.defaults = {
             "posture_threshold": 0.75,
             "posture_strictness": 0.85,
@@ -54,7 +54,5 @@ class AppSettings:
         """
         if key in self.defaults:
             self.settings.setValue(key, value)
-            # You can call self.settings.sync() here if you
-            # need to guarantee an immediate write to disk.
         else:
             print(f"Warning: Attempted to set unknown setting '{key}'")
