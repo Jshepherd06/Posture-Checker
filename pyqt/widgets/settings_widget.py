@@ -19,16 +19,16 @@ class SettingsWidget(QWidget):
         main_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
         
         # Title
-        title_label = QLabel("⚙️ Posture Detector Settings")
+        title_label = QLabel(" Posture Detector Settings")
         title_label.setStyleSheet("font-size: 24px; font-weight: bold;")
         main_layout.addWidget(title_label)
         main_layout.addSpacing(20)
         
         # --- Group 1: Posture Sensitivity (No Calibration) ---
-        no_calib_group = QGroupBox("🧍 Posture Sensitivity Without Calibration")
+        no_calib_group = QGroupBox(" Posture Sensitivity Without Calibration")
         no_calib_layout = QFormLayout(no_calib_group)
 
-        # 1. Posture Threshold (0.5 to 1.0)
+        #  Posture Threshold (0.5 to 1.0)
         self.threshold_slider = QSlider(Qt.Orientation.Horizontal)
         self.threshold_slider.setRange(50, 100)
         # Convert stored float (e.g., 0.75) to integer slider value (75)
@@ -43,7 +43,7 @@ class SettingsWidget(QWidget):
         calib_group = QGroupBox("📐 Calibration & Strictness")
         calib_layout = QFormLayout(calib_group)
 
-        # 2. Posture Strictness (0.5 to 1.0) - Already implemented in prior steps
+        #  Posture Strictness (0.5 to 1.0) - Already implemented in prior steps
         self.strictness_slider = QSlider(Qt.Orientation.Horizontal)
         self.strictness_slider.setRange(50, 100)
         initial_strictness = int(self.settings.get("posture_strictness") * 100)
@@ -51,7 +51,7 @@ class SettingsWidget(QWidget):
         self.strictness_slider.valueChanged.connect(self.on_strictness_changed)
         calib_layout.addRow("Strictness (% of baseline, x/100):", self.strictness_slider)
 
-        # 3. Calibration Duration (1 to 10 seconds)
+        #  Calibration Duration (1 to 10 seconds)
         self.duration_slider = QSlider(Qt.Orientation.Horizontal)
         self.duration_slider.setRange(1, 10)
         self.duration_slider.setValue(self.settings.get("calibration_duration"))
@@ -61,17 +61,17 @@ class SettingsWidget(QWidget):
         main_layout.addWidget(calib_group)
         
         # --- Group 3: Audio & Alerts ---
-        audio_group = QGroupBox("🔊 Audio & Alerts")
+        audio_group = QGroupBox(" Audio & Alerts")
         audio_layout = QFormLayout(audio_group)
 
-        # 4. Warning Cooldown (1 to 10 seconds)
+        #  Warning Cooldown (1 to 10 seconds)
         self.wait_slider = QSlider(Qt.Orientation.Horizontal)
         self.wait_slider.setRange(1, 10)
         self.wait_slider.setValue(self.settings.get("warning_wait"))
         self.wait_slider.valueChanged.connect(self.on_wait_changed)
         audio_layout.addRow("Cooldown between warnings (seconds):", self.wait_slider)
         
-        # 5. Sound Enabled (Toggle/CheckBox)
+        #  Sound Enabled (Toggle/CheckBox)
         self.sound_toggle = QCheckBox("Enable warning sound")
         self.sound_toggle.setChecked(self.settings.get("sound_enabled"))
         self.sound_toggle.toggled.connect(self.on_sound_toggled)
@@ -80,7 +80,7 @@ class SettingsWidget(QWidget):
         main_layout.addWidget(audio_group)
         main_layout.addStretch(1) # Push everything to the top
 
-    # --- SLOTS (Functions to handle widget changes) ---
+    # Functions to handle widget changes -------
     
     def on_threshold_changed(self, value):
         # Converts integer (50-100) to float (0.5-1.0) and saves
