@@ -70,7 +70,9 @@ This will open the application
 ## todo: 
   - improve readme
   - replace streamlit app with pyqt app
+  - executable for simple use of app
   - warning sound/popup
   - statistical analysis longer periods
-  - error handling
+  - improved error handling
+  - improved UI, to better allow for adjustable window size
     

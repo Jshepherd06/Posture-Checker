@@ -1,2 +1,4 @@
 PostureChecker/__pycache__/
 pyqt/__pycache__/
+pyqt/widgets/__pycache__/
+pyqt/core/__pycache__/

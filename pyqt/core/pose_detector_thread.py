@@ -124,7 +124,7 @@ class PoseDetectorThread(QThread):
         else:
             threshold = self.settings.get("posture_threshold")
         
-        cv2.putText(frame, f"Posture Ratio: {posture_ratio:.4f}", (30, 80), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,255), 2)
+        cv2.putText(frame, f"Posture Ratio: {posture_ratio:.2f}", (30, 80), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,255), 2)
         
         if posture_ratio > threshold:
             cv2.putText(frame, "Good posture", (30, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,255,0), 2)

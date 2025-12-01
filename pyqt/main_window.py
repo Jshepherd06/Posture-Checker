@@ -62,11 +62,9 @@ class MainAppWindow(QMainWindow):
         self.nav_list.setCurrentRow(0)
 
     def go_to_pose_detector(self):
-        # This function is the equivalent of st.switch_page
         self.nav_list.setCurrentRow(1) # This will trigger the signal to change page
 
     def closeEvent(self, event):
-        # IMPORTANT: Tell the worker thread to stop
         self.pose_page.stop_worker_thread()
         event.accept()
 

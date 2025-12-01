@@ -19,7 +19,7 @@ class SettingsWidget(QWidget):
         main_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
         
         # Title
-        title_label = QLabel(" Posture Detector Settings")
+        title_label = QLabel("Posture Detector Settings")
         title_label.setStyleSheet("font-size: 24px; font-weight: bold;")
         main_layout.addWidget(title_label)
         main_layout.addSpacing(20)
@@ -40,7 +40,7 @@ class SettingsWidget(QWidget):
         main_layout.addWidget(no_calib_group)
         
         # --- Group 2: Calibration Settings ---
-        calib_group = QGroupBox("📐 Calibration & Strictness")
+        calib_group = QGroupBox(" Calibration & Strictness")
         calib_layout = QFormLayout(calib_group)
 
         #  Posture Strictness (0.5 to 1.0) - Already implemented in prior steps
@@ -61,7 +61,7 @@ class SettingsWidget(QWidget):
         main_layout.addWidget(calib_group)
         
         # --- Group 3: Audio & Alerts ---
-        audio_group = QGroupBox(" Audio & Alerts")
+        audio_group = QGroupBox("Audio & Alerts")
         audio_layout = QFormLayout(audio_group)
 
         #  Warning Cooldown (1 to 10 seconds)

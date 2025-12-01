@@ -11,7 +11,6 @@ class StatisticsWidget(QWidget):
         layout = QVBoxLayout(self)
         layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
         
-        # A simple placeholder label
         label = QLabel("Statistics Page (Coming Soon)")
         label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         label.setStyleSheet("font-size: 24px;")
