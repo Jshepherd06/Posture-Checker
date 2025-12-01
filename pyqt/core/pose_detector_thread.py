@@ -19,9 +19,10 @@ class PoseDetectorThread(QThread):
     # Signal for calibration status
     calibration_status = pyqtSignal(str)
 
-    def __init__(self, settings, parent=None):
+    def __init__(self, settings, data_manager, parent=None):
         super().__init__(parent)
         self.settings = settings
+        self.data_manager = data_manager
         self.running = True
         self.calibrating = False
 
@@ -78,6 +79,9 @@ class PoseDetectorThread(QThread):
             if results.pose_landmarks:
                 posture_ratio = self.read_posture(results.pose_landmarks.landmark)
                 self.add_text_and_check(frame, posture_ratio)
+
+                # Record data
+                self.data_manager.add_ratio(posture_ratio)
             
             # --- Emit the processed frame ---
             self.frame_ready.emit(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))

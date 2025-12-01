@@ -1,55 +1,63 @@
 from PyQt6.QtCore import QObject, pyqtSignal
 import time
+import numpy as np
 
 class AppDataManager(QObject):
-    """
-    Manages the posture data log and emits signals when new data is added.
-    """
     # Signal to notify the statistics page that new data is available
     new_ratio_data = pyqtSignal()
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        # Store data as a list of (timestamp, posture_ratio)
+        
+        # This will hold the long-term history (1 point per second)
+        # Format: (timestamp, average_ratio)
         self.posture_log = []
-        # Store the current window of data for the graph
-        self.last_60_seconds = [] 
+        
+        # This acts as a temporary buffer to calculate the 1-second average
+        self.second_buffer = []
+        self.last_save_time = time.time()
 
-        # We will keep a limit on how much data to store to prevent memory issues
-        self.MAX_LOG_SIZE = 1800 # ~30 minutes at 1 update per second
+        # Capacity: 10 hours * 60 mins * 60 secs = 36,000 points
+        self.MAX_LOG_SIZE = 36000 
 
     def add_ratio(self, ratio):
         """
-        Called by the PoseDetectorThread to record a new data point.
+        Called by the thread every frame (~30 times/sec).
+        We buffer these and average them into 1-second chunks.
         """
         current_time = time.time()
-        new_point = (current_time, ratio)
-        
-        # 1. Add to the full log
-        self.posture_log.append(new_point)
-        
-        # 2. Trim the log if it exceeds the max size
-        if len(self.posture_log) > self.MAX_LOG_SIZE:
-            self.posture_log.pop(0)
+        self.second_buffer.append(ratio)
 
-        # 3. Update the rolling 60-second window
-        one_minute_ago = current_time - 60
-        self.last_60_seconds = [p for p in self.posture_log if p[0] >= one_minute_ago]
-        
-        # 4. Emit signal to update the statistics page
-        self.new_ratio_data.emit()
+        # If 1 second has passed since the last save...
+        if current_time - self.last_save_time >= 1.0:
+            if self.second_buffer:
+                # Calculate average of the last second
+                avg_ratio = np.mean(self.second_buffer)
+                
+                # Save to long-term log
+                self.posture_log.append((current_time, avg_ratio))
+                
+                # Reset buffer and timer
+                self.second_buffer = []
+                self.last_save_time = current_time
+                
+                # Trim log if too big
+                if len(self.posture_log) > self.MAX_LOG_SIZE:
+                    self.posture_log.pop(0)
+
+                # Emit signal to update graph (now only happens once per second!)
+                self.new_ratio_data.emit()
 
     def get_latest_data(self):
         """
-        Called by StatisticsWidget to fetch the data for the graph.
-        Returns two lists: timestamps (x-axis) and ratios (y-axis)
+        Returns the entire session history.
         """
-        if not self.last_60_seconds:
+        if not self.posture_log:
             return [], []
             
-        timestamps, ratios = zip(*self.last_60_seconds)
+        timestamps, ratios = zip(*self.posture_log)
         
-        # Convert timestamps to relative seconds for better plotting
+        # Convert timestamps to relative time (seconds since start)
         start_time = timestamps[0]
         relative_times = [(t - start_time) for t in timestamps]
         

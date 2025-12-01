@@ -9,7 +9,8 @@ from widgets.homepage_widget import HomePageWidget
 from widgets.pose_detector_widget import PoseDetectorWidget
 from widgets.settings_widget import SettingsWidget
 from widgets.stats_widget import StatisticsWidget
-from app_settings import AppSettings # A new class to manage QSettings
+from app_settings import AppSettings
+from app_data import AppDataManager
 
 class MainAppWindow(QMainWindow):
     def __init__(self):
@@ -19,6 +20,8 @@ class MainAppWindow(QMainWindow):
 
         # Load/create settings
         self.settings = AppSettings()
+        # Initialize Data Manager
+        self.data_manager = AppDataManager()
 
         # Main layout
         central_widget = QWidget()
@@ -37,9 +40,9 @@ class MainAppWindow(QMainWindow):
         # --- Create and Add Pages ---
         # Pass the settings object to the widgets that need it
         self.home_page = HomePageWidget()
-        self.pose_page = PoseDetectorWidget(self.settings) 
+        self.pose_page = PoseDetectorWidget(self.settings, self.data_manager)
         self.settings_page = SettingsWidget(self.settings)
-        self.stats_page = StatisticsWidget()
+        self.stats_page = StatisticsWidget(self.data_manager)
 
         self.stacked_widget.addWidget(self.home_page)    # Index 0
         self.stacked_widget.addWidget(self.pose_page)     # Index 1
