@@ -21,7 +21,7 @@ class MainAppWindow(QMainWindow):
         # Load/create settings
         self.settings = AppSettings()
         # Initialize Data Manager
-        self.data_manager = AppDataManager()
+        self.data_manager = AppDataManager(self.settings)
 
         # Main layout
         central_widget = QWidget()
@@ -42,7 +42,7 @@ class MainAppWindow(QMainWindow):
         self.home_page = HomePageWidget()
         self.pose_page = PoseDetectorWidget(self.settings, self.data_manager)
         self.settings_page = SettingsWidget(self.settings)
-        self.stats_page = StatisticsWidget(self.data_manager)
+        self.stats_page = StatisticsWidget(self.settings, self.data_manager)
 
         self.stacked_widget.addWidget(self.home_page)    # Index 0
         self.stacked_widget.addWidget(self.pose_page)     # Index 1

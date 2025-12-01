@@ -3,11 +3,16 @@ import time
 import numpy as np
 
 class AppDataManager(QObject):
+    """
+    Manages the posture data log by averaging frames into 1-second chunks,
+    and calculates ongoing session statistics.
+    """
     # Signal to notify the statistics page that new data is available
     new_ratio_data = pyqtSignal()
 
-    def __init__(self, parent=None):
+    def __init__(self, settings, parent=None): 
         super().__init__(parent)
+        self.settings = settings
         
         # This will hold the long-term history (1 point per second)
         # Format: (timestamp, average_ratio)
@@ -17,13 +22,13 @@ class AppDataManager(QObject):
         self.second_buffer = []
         self.last_save_time = time.time()
 
-        # Capacity: 10 hours * 60 mins * 60 secs = 36,000 points
+        # Capacity: ~10 hours of 1-second data points
         self.MAX_LOG_SIZE = 36000 
 
     def add_ratio(self, ratio):
         """
         Called by the thread every frame (~30 times/sec).
-        We buffer these and average them into 1-second chunks.
+        Buffers data and saves an average 1-second chunk to the log.
         """
         current_time = time.time()
         self.second_buffer.append(ratio)
@@ -50,7 +55,9 @@ class AppDataManager(QObject):
 
     def get_latest_data(self):
         """
-        Returns the entire session history.
+        Retrieves the entire session history for plotting.
+        
+        THIS IS THE METHOD THAT WAS MISSING.
         """
         if not self.posture_log:
             return [], []
@@ -62,3 +69,57 @@ class AppDataManager(QObject):
         relative_times = [(t - start_time) for t in timestamps]
         
         return relative_times, list(ratios)
+
+    def calculate_posture_stats(self):
+        """
+        Calculates the total duration, percentage of good posture time, and 
+        the longest streak of good posture (above threshold).
+        Returns: (total_duration_s, percent_good, longest_streak_s, active_threshold)
+        """
+        if not self.posture_log:
+            return 0.0, 0.0, 0.0, 0.0 
+
+        # 1. Determine the active threshold (Calibration takes precedence)
+        baseline = self.settings.get("baseline")
+        strictness = self.settings.get("posture_strictness")
+        default_threshold = self.settings.get("posture_threshold")
+        
+        if baseline > 0:
+            active_threshold = baseline * strictness
+        else:
+            active_threshold = default_threshold
+        
+        timestamps, ratios = zip(*self.posture_log)
+        
+        total_duration_s = timestamps[-1] - timestamps[0]
+        if total_duration_s == 0:
+             return 0.0, 0.0, 0.0, active_threshold
+
+        # 2. Calculate time above threshold (good posture) and longest streak
+        good_posture_time_s = 0.0
+        longest_streak_s = 0.0
+        current_streak_s = 0.0
+        
+        # Iterate through the 1-second averaged data points
+        for i in range(len(self.posture_log)):
+            ratio = self.posture_log[i][1] # Get the ratio
+            time_interval_s = 1.0 
+            
+            is_good = ratio > active_threshold
+            
+            if is_good:
+                good_posture_time_s += time_interval_s
+                current_streak_s += time_interval_s
+            else:
+                # Streak is broken, save if it's the longest
+                if current_streak_s > longest_streak_s:
+                    longest_streak_s = current_streak_s
+                current_streak_s = 0.0
+
+        # Check the final streak when the loop ends
+        if current_streak_s > longest_streak_s:
+            longest_streak_s = current_streak_s
+
+        percent_good = (good_posture_time_s / total_duration_s) * 100
+        
+        return total_duration_s, percent_good, longest_streak_s, active_threshold

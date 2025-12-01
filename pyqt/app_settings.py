@@ -17,6 +17,7 @@ class AppSettings:
             "warning_wait": 3,
             "calibration_duration": 3,
             "sound_enabled": True,
+            "baseline": 0.0
         }
         
         # Ensure all default settings are populated on first launch
