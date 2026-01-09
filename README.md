@@ -14,7 +14,7 @@ It uses your webcam to detect your body landmarks and determine whether you are 
 
 ---
 
-## 🧩 How It Works
+## How It Works
 
 1. **MediaPipe Pose** detects 33 key body landmarks in real time.  
 2. The app measures the vertical distance between your **nose** and **shoulders**,  
@@ -24,7 +24,7 @@ It uses your webcam to detect your body landmarks and determine whether you are 
 
 ---
 
-## 🛠️ Installation
+## Installation
 
 ### 1. Clone the repository
 ```bash
@@ -50,7 +50,7 @@ python main.py
 This will open the application
 
 
-## 🧠 Dependencies
+## Dependencies
 
 **OpenCV**
  – Real-time camera use
@@ -66,13 +66,15 @@ This will open the application
 **PyGame**
  – Audio handling
 
+**matplotlib**
+ - Statistics visualization
+
 
 ## todo: 
   - improve readme
-  - replace streamlit app with pyqt app
   - executable for simple use of app
-  - warning sound/popup
-  - statistical analysis longer periods
+  - MORE statistical analysis oer longer periods
   - improved error handling
-  - improved UI, to better allow for adjustable window size
+  - improved UI, allow for adjustable window size
+  - make threshold on stats page update with calibration
     
