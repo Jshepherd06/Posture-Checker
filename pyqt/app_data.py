@@ -56,8 +56,6 @@ class AppDataManager(QObject):
     def get_latest_data(self):
         """
         Retrieves the entire session history for plotting.
-        
-        THIS IS THE METHOD THAT WAS MISSING.
         """
         if not self.posture_log:
             return [], []

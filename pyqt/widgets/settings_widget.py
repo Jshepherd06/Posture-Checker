@@ -24,7 +24,7 @@ class SettingsWidget(QWidget):
         main_layout.addWidget(title_label)
         main_layout.addSpacing(20)
         
-        # --- Group 1: Posture Sensitivity (No Calibration) ---
+        # --- Posture Sensitivity (No Calibration) ---
         no_calib_group = QGroupBox(" Posture Sensitivity Without Calibration")
         no_calib_layout = QFormLayout(no_calib_group)
 
@@ -39,7 +39,7 @@ class SettingsWidget(QWidget):
 
         main_layout.addWidget(no_calib_group)
         
-        # --- Group 2: Calibration Settings ---
+        # --- Calibration Settings ---
         calib_group = QGroupBox(" Calibration & Strictness")
         calib_layout = QFormLayout(calib_group)
 

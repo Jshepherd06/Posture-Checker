@@ -20,7 +20,7 @@ class StatisticsWidget(QWidget):
         
         # Layout
         main_layout = QVBoxLayout(self)
-        title_label = QLabel("📊 Session History")
+        title_label = QLabel("Session History")
         title_label.setStyleSheet("font-size: 24px; font-weight: bold;")
         
         # Labels for the new statistics
@@ -70,9 +70,9 @@ class StatisticsWidget(QWidget):
         
         # Update text labels
         self.status_label.setText(f"Session Duration: {self.format_duration(total_s)}")
-        self.percent_label.setText(f"Time Good Posture: **{percent_good:.1f}%**")
-        self.streak_label.setText(f"Longest Good Streak: **{self.format_duration(longest_streak_s)}**")
-        self.threshold_label.setText(f"Active Threshold: **{threshold:.3f}**")
+        self.percent_label.setText(f"Time Good Posture: {percent_good:.1f}%")
+        self.streak_label.setText(f"Longest Good Streak: {self.format_duration(longest_streak_s)}")
+        self.threshold_label.setText(f"Active Threshold: {threshold:.3f}")
 
         if relative_times and ratios:
             self.axis.plot(relative_times, ratios, label='Avg Posture (1s)', color='skyblue')

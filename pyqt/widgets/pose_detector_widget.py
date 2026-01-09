@@ -15,8 +15,7 @@ class PoseDetectorWidget(QWidget):
         self.video_label = QLabel("Starting camera...")
         self.video_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.video_label.setStyleSheet("background-color: black;")
-        
-        # --- FIX IS HERE ---
+
         # We set the policy to 'Expanding' so the video resizes with the window
         self.video_label.setSizePolicy(
             QSizePolicy.Policy.Expanding,
